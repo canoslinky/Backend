@@ -7,8 +7,8 @@ app.use(cors())
 app.use(express())
 
 var posts = [
-    { message: 'Hola' },
-    { message: 'Mundo' }
+    { message: 'Hello' },
+    { message: 'World' }
 ]
 
 app.get( '/posts', (req, res ) =>{
