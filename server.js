@@ -5,6 +5,8 @@ var mongoose = require('mongoose')
 
 var app = express()
 
+var User = require('./models/User.js')
+
 app.use(cors())
 app.use(express())
 app.use(bodyParser.json())
@@ -20,8 +22,16 @@ app.get( '/posts', (req, res ) =>{
 
 app.post('/register', (req, res) => {
     var userData = req.body;
-    console.log(userData.email);
-    res.sendStatus(200);
+
+    var user = new User( userData )
+    user.save( (err, result) => {
+        if(err)
+            console.log('Saving user error...')
+        
+            res.sendStatus(200);
+            
+    })
+    
 })
 
 mongoose.connect('mongodb://test:test@ds211558.mlab.com:11558/psaccount',  (err) => {
