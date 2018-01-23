@@ -4,3 +4,5 @@ module.exports = mongoose.model('User', {
     email : String,
     pwd: String
 })
+
+
