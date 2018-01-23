@@ -25,10 +25,10 @@ app.post('/register', (req, res) => {
     
 })
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     var loginData = req.body
 
-    var user = await User.findOne({email: userData.email})
+    var user = await User.findOne({email: loginData.email})
     console.log(user);
 
 })
