@@ -11,15 +11,6 @@ app.use(cors())
 app.use(express())
 app.use(bodyParser.json())
 
-var posts = [
-    { message: 'Hola' },
-    { message: 'Mundo' }
-]
-
-app.get( '/posts', (req, res ) =>{
-    res.send(posts)
-})
-
 app.post('/register', (req, res) => {
     var userData = req.body;
 
@@ -34,6 +25,13 @@ app.post('/register', (req, res) => {
     
 })
 
+app.post('/login', (req, res) => {
+    var loginData = req.body
+
+    var user = await User.findOne({email: userData.email})
+    console.log(user);
+
+})
 mongoose.connect('mongodb://test:test@ds211558.mlab.com:11558/psaccount',  (err) => {
     if(!err)
         console.log('connected to mongo')
