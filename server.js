@@ -29,9 +29,31 @@ app.post('/login', async (req, res) => {
     var loginData = req.body
 
     var user = await User.findOne({email: loginData.email})
-    console.log(user);
+
+    if(!user)
+        return res.sendStatus(401).send({ message: 'Email or password invalid'})
+
+    if(user.pwd != loginData.pwd)
+        return res.sendStatus(401).send({ message: 'Email or password invalid'})
+    
+    var payload = {}
+    var token = jwt.encode(payload, '123')
+    res.sendStatus(200).send({token})
 
 })
+
+app.get('/users', async( req, res) =>{
+    try {
+        var users = await User.find({}, '-pwd -__v');
+        res.send(users)
+    }
+    catch(error)
+    {
+        console.error(error)
+        res.sendStatus(500)
+    }
+} )
+
 mongoose.connect('mongodb://test:test@ds211558.mlab.com:11558/psaccount',  (err) => {
     if(!err)
         console.log('connected to mongo')
