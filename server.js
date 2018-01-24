@@ -54,6 +54,18 @@ app.get('/users', async( req, res) =>{
     }
 } )
 
+app.get('/profile/:id', async(req, res) =>{
+    console.log(req.params.id);
+    
+    try{
+        var user = await User.find({_id: req.params.id});
+        res.send(user);
+    }
+    catch(error){
+        console.error(error)
+        res.sendStatus(500);
+    }
+})
 mongoose.connect('mongodb://test:test@ds211558.mlab.com:11558/psaccount',  (err) => {
     if(!err)
         console.log('connected to mongo')
