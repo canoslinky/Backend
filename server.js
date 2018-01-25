@@ -2,7 +2,10 @@ var express = require('express')
 var cors = require('cors')
 var bodyParser = require('body-parser')
 var mongoose = require('mongoose')
+var jwt = require('jwt-simple')
+var bcrypt = require('bcrypt-nodejs')
 
+mongoose.Promise = Promise 
 var app = express()
 
 var User = require('./models/User.js')
@@ -20,9 +23,7 @@ app.post('/register', (req, res) => {
             console.log('Saving user error...')
         
             res.sendStatus(200);
-            
     })
-    
 })
 
 app.post('/login', async (req, res) => {
@@ -33,13 +34,14 @@ app.post('/login', async (req, res) => {
     if(!user)
         return res.sendStatus(401).send({ message: 'Email or password invalid'})
 
-    if(user.pwd != loginData.pwd)
-        return res.sendStatus(401).send({ message: 'Email or password invalid'})
-    
-    var payload = {}
-    var token = jwt.encode(payload, '123')
-    res.sendStatus(200).send({token})
+    bcrypt.compare(loginData.pwd, user.pwd, (err, isMatch) => {
+        if(!isMatch)
+            return res.status(401).send({ message: 'Email or password invalid'})
 
+        var payload = {}
+        var token = jwt.encode(payload, '123')
+        res.status(200).send({token})
+    })
 })
 
 app.get('/users', async( req, res) =>{
@@ -55,10 +57,8 @@ app.get('/users', async( req, res) =>{
 } )
 
 app.get('/profile/:id', async(req, res) =>{
-    console.log(req.params.id);
-    
     try{
-        var user = await User.find({_id: req.params.id});
+        var user = await User.findById(req.params.id, '-pwd -__v');
         res.send(user);
     }
     catch(error){
