@@ -5,6 +5,7 @@ var mongoose = require('mongoose')
 var auth = require('./auth.js')
 var User = require('./models/User.js')
 var Post = require('./models/Post.js')
+var jwt = require('jwt-simple')
 
 mongoose.Promise = Promise 
 var app = express()
@@ -25,7 +26,7 @@ app.get('/users', async( req, res) =>{
     }
 } )
 
-app.get('/profile/:id', async(req, res) =>{
+app.get('/profile/:id', async(req, res) =>{ 
     try{
         var user = await User.findById(req.params.id, '-pwd -__v');
         res.send(user);
@@ -48,7 +49,7 @@ app.get('/posts/:_creator', async (req, res) => {
 })
 app.post('/post', (req, res) => {
     var postData = req.body;
-    postData._creator = '5a6a19afa2da660672bcabf2'
+    postData._creator = req.userId;
 
     var post = new Post(postData)
     
@@ -66,5 +67,5 @@ mongoose.connect('mongodb://test:test@ds211558.mlab.com:11558/psaccount',  (err)
         console.log('connected to mongo')
 })
 
-app.use('/auth', auth)
+app.use('/auth', auth.router)
 app.listen(3000);
