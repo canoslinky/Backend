@@ -22,7 +22,7 @@
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "express": "^4.16.2",
-    "jwt-simple": "^0.5.1",
+    "jwt-simple": "^0.5.3",
     "mongoose": "^5.4.21",
     "nodemon": "^1.18.10"
   }
